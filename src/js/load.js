@@ -50,11 +50,17 @@ Game.Load.prototype = {
     //Load button for twitter
     this.game.load.image('twitter','assets/images/twitter.png');
 
+    this.game.load.image('scoop','assets/images/scoops1.png');
+    this.game.load.image('sky', 'assets/images/sky.png');
+    this.game.load.image('waves', 'assets/images/waves.png');
+    this.game.load.spritesheet('player', 'assets/images/player.png',96,96,4);
+
     // Music Track
     // this.game.load.audio('music','soundtrack.mp3');
 
   },
   create: function() {
-    this.game.state.start('Menu');
+    // this.game.state.start('Menu');
+    this.game.state.start('Play');
   }
 };
