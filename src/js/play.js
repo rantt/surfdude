@@ -34,6 +34,7 @@ Game.Play.prototype = {
 
 		this.game.stage.backgroundColor = '#5fcde4';
 		this.scrollPosition = 0;
+    this.score = 0;
 
     background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sky');
     background.tileScale.set(2);
@@ -46,11 +47,16 @@ Game.Play.prototype = {
     border.body.allowGravity = false;
 
     this.player = this.game.add.sprite(128, Game.h-164, 'player');
+    this.game.physics.arcade.enable(this.player);
+    this.player.body.setSize(32, 64);
     this.player.scale.x = 2;
     this.player.scale.y = 2;
     this.player.anchor.setTo(0.5);
     this.player.animations.add('surf',[0,1,0],10, true);
     this.player.play('surf');
+
+    this.enemies = this.game.add.group();
+    this.timer = this.game.time.events.loop(1600, this.addEnemies, this);
 
     // // Music
     // this.music = this.game.add.sound('music');
@@ -83,11 +89,42 @@ Game.Play.prototype = {
       this.duck();
     },this);
 
+    this.playAgainText = this.game.add.bitmapText(Game.w + 100, this.game.world.centerY, 'minecraftia','test',48);
+    
+    this.scoreText = this.game.add.bitmapText(Game.w-150, 24, 'minecraftia', 'Score: '+this.score, 24); 
 
     //Create Twitter button as invisible, show during win condition to post highscore
     this.twitterButton = this.game.add.button(this.game.world.centerX, this.game.world.centerY + 200,'twitter', this.twitter, this);
     this.twitterButton.anchor.set(0.5);
     this.twitterButton.visible = false;
+  },
+  addEnemies: function() {
+    if (this.player.alive === false) {
+      return;
+    }else {
+      this.score += 1;
+      this.scoreText.setText('Score: '+this.score);
+    }
+    var e;
+    if(this.enemies.getFirstExists(false) === null) {
+      console.log('inhere');
+      // e = this.add.sprite(Game.w + 64, Game.h/2, 'shark');
+      e = this.add.sprite(Game.w,  Game.h-164, 'shark');
+      e.animations.add('bite', [0, 1, 2], 20);
+      e.anchor.setTo(0,-0.5);
+      this.game.physics.arcade.enable(e);
+      e.checkWorldBounds = true;
+      e.outOfBoundsKill = true;
+      e.bite = false;
+      // e.body.immovable = true;
+      this.enemies.add(e);
+    }else {
+      console.log('reset');
+      e = this.enemies.getFirstExists(false);
+      e.reset(Game.w, Game.h-164);
+      e.bite = false;
+    }
+    e.body.velocity.x = -355;
   },
  jump: function() {
       if (this.tweening) {return;}
@@ -96,10 +133,9 @@ Game.Play.prototype = {
       this.player.frame = 3;
 
       var t = this.game.add.tween(this.player)
-                .to({y: Game.h-300},250, Phaser.Easing.Linear.None)
-                .to({y: Game.h-164},250, Phaser.Easing.Linear.None)
+                .to({y: Game.h-300},400, Phaser.Easing.Linear.None)
+                .to({y: Game.h-164},400, Phaser.Easing.Linear.None)
                 .start();
-
       t.onComplete.add(function() {
         this.tweening = false;
       }, this);
@@ -112,8 +148,8 @@ Game.Play.prototype = {
 
     //     this.player.y = Game.h-100;
       var t = this.game.add.tween(this.player)
-                .to({y: Game.h-100},250, Phaser.Easing.Linear.None)
-                .to({y: Game.h-164},250, Phaser.Easing.Linear.None)
+                .to({y: Game.h-100},600, Phaser.Easing.Linear.None)
+                .to({y: Game.h-164},600, Phaser.Easing.Linear.None)
                 .start();
 
       t.onComplete.add(function() {
@@ -129,10 +165,51 @@ Game.Play.prototype = {
 		bmd.ctx.fill();
 		return bmd;
 	},
+  checkOverlap: function(spriteA, spriteB) {
+    var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+    return Phaser.Rectangle.intersects(boundsA, boundsB);
+  },
   update: function() {
-    if (!this.tweening) {
-      this.player.play('surf');
-    }
+
+    if (this.player.alive === true) {
+      if (!this.tweening) {
+        this.player.play('surf');
+      }
+
+      this.game.physics.arcade.collide(this.player, this.enemies, function(player, enemy) {
+        enemy.play('bite');
+        this.player.kill();
+        console.log('hit');
+      }, null, this); 
+    }else {
+        this.playAgainText.setText('Try Again?');
+        this.game.time.events.add(Phaser.Timer.SECOND * 1.5, function() { 
+            this.game.add.tween(this.playAgainText).to({x: this.game.world.centerX-300}, 355, Phaser.Easing.Linear.None).start();
+            this.twitterButton.visible = true;
+        }, this);
+          
+        if (this.game.input.activePointer.isDown || wKey.isDown || this.cursors.up.isDown){
+          this.enemies.forEach(function(e) {
+            e.alive = false;
+          });
+          this.player.alive = true;
+          this.score = 0;
+          this.game.state.start('Play');
+        }
+      }
+    
+
+    // this.enemies.forEach(function(enemy) {
+    //   if (enemy.x < 300 && enemy.bite === false) {
+    //     enemy.play('bite');
+    //     enemy.bite = true;
+    //   }
+    //   if (this.checkOverlap(this.player, enemy)) {
+    //     this.player.kill();
+    //   }
+    // }, this);
+    //
 
     // if (!this.tweening) {
     //   if(this.cursor.up.isDown || wKey.isDown) {
@@ -177,8 +254,12 @@ Game.Play.prototype = {
   //     this.music.volume = 0.5;
   //   }
   // },
-  // render: function() {
-  //   game.debug.text('Health: ' + tri.health, 32, 96);
-  // }
+  render: function() {
+    // game.debug.text('Health: ' + tri.health, 32, 96);
+    this.game.debug.body(this.player);
+    this.enemies.forEach(function(enemy) {
+      this.game.debug.body(enemy);
+    }, this);
+  }
 
 };

@@ -55,6 +55,8 @@ Game.Load.prototype = {
     this.game.load.image('waves', 'assets/images/waves.png');
     this.game.load.spritesheet('player', 'assets/images/player.png',96,96,4);
 
+    this.game.load.atlasXML('shark', 'assets/images/shark.png', 'assets/atlas/shark.xml');
+
     // Music Track
     // this.game.load.audio('music','soundtrack.mp3');
 
