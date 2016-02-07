@@ -86,7 +86,7 @@ Game.Play.prototype = {
 
     this.playAgainText = this.game.add.bitmapText(Game.w + 100, this.game.world.centerY, 'minecraftia','test',48);
     
-    this.scoreText = this.game.add.bitmapText(Game.w-150, 24, 'minecraftia', 'Score: '+this.score, 24); 
+    this.scoreText = this.game.add.bitmapText(Game.w-200, 24, 'minecraftia', 'Score: '+this.score, 24); 
 
 
     this.loadTouchControls();
