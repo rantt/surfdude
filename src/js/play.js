@@ -36,6 +36,13 @@ Game.Play.prototype = {
 		this.scrollPosition = 0;
     this.score = 0;
 
+
+
+    // Music
+    this.music = this.game.add.sound('music');
+    this.music.play('',0,0.3,true);
+
+    //Background
     background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sky');
     background.tileScale.set(2);
 	
@@ -271,6 +278,7 @@ Game.Play.prototype = {
           this.enemies.forEach(function(e) {
             e.alive = false;
           });
+          this.music.stop();
           this.player.alive = true;
           this.score = 0;
           this.game.state.start('Play');

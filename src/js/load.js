@@ -59,6 +59,10 @@ Game.Load.prototype = {
 
     this.game.load.spritesheet('duck', 'assets/images/duck.png', 64, 64, 2);
 
+
+    // Music Track
+    this.game.load.audio('music','assets/audio/Tropical Adventure_0.mp3');
+
     // Music Track
     // this.game.load.audio('music','soundtrack.mp3');
 
