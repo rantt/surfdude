@@ -20,10 +20,10 @@ Game.Boot.prototype = {
     this.game.load.bitmapFont('minecraftia', 'assets/fonts/font.png', 'assets/fonts/font.xml'); //load default font
 
 
-    // //Scale Image to Fit Window
-    // this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    // this.game.scale.maxHeight = window.innerHeight;
-    // this.game.scale.maxWidth = window.innerHeight*(Game.w/Game.h);
+    //Scale Image to Fit Window
+    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    this.game.scale.maxHeight = window.innerHeight;
+    this.game.scale.maxWidth = window.innerHeight*(Game.w/Game.h);
 
   },
   create: function() {
@@ -50,18 +50,21 @@ Game.Load.prototype = {
     //Load button for twitter
     this.game.load.image('twitter','assets/images/twitter.png');
 
-    this.game.load.image('scoop','assets/images/scoops1.png');
+    //Background
     this.game.load.image('sky', 'assets/images/sky.png');
     this.game.load.image('waves', 'assets/images/waves.png');
+
+    //Actors
     this.game.load.spritesheet('player', 'assets/images/player.png',96,96,4);
-
     this.game.load.atlasXML('shark', 'assets/images/shark.png', 'assets/atlas/shark.xml');
-
     this.game.load.spritesheet('duck', 'assets/images/duck.png', 64, 64, 2);
 
 
     // Music Track
     this.game.load.audio('music','assets/audio/Tropical Adventure_0.mp3');
+
+    //SFX
+    this.game.load.audio('hit','assets/audio/hit.wav');
 
     // Music Track
     // this.game.load.audio('music','soundtrack.mp3');

@@ -36,11 +36,13 @@ Game.Play.prototype = {
 		this.scrollPosition = 0;
     this.score = 0;
 
-
-
     // Music
     this.music = this.game.add.sound('music');
     this.music.play('',0,0.3,true);
+
+    //sfx
+    this.hitSnd = this.game.add.sound('hit');
+    this.hitSnd.volume = 0.5;
 
     //Background
     background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sky');
@@ -265,6 +267,7 @@ Game.Play.prototype = {
       this.game.physics.arcade.collide(this.player, this.enemies, function(player, enemy) {
         enemy.play('bite');
         this.player.kill();
+        this.hitSnd.play();
         console.log('hit');
       }, null, this); 
     }else {
@@ -284,36 +287,8 @@ Game.Play.prototype = {
           this.game.state.start('Play');
         }
       }
-    
-
-    // this.enemies.forEach(function(enemy) {
-    //   if (enemy.x < 300 && enemy.bite === false) {
-    //     enemy.play('bite');
-    //     enemy.bite = true;
-    //   }
-    //   if (this.checkOverlap(this.player, enemy)) {
-    //     this.player.kill();
-    //   }
-    // }, this);
-    //
-
-    // if (!this.tweening) {
-    //   if(this.cursor.up.isDown || wKey.isDown) {
-    //     // if (this.keyDown !== true) {
-    //       // this.keyDown = true;
-    //       this.player.y = Game.h-300;
-    //       this.player.frame = 3;
-    //     // }
-    //   }else if(this.cursor.down.isDown || sKey.isDown) {
-    //     // this.keyDown = true;
-    //     this.player.y = Game.h-100;
-    //     this.player.frame = 2;
-    //   }else {
-    //     // this.keyDown = false;
-    //     this.player.y = Game.h-164;
-    //   }
-    // // }
-
+   
+    //Animate Background 
     this.scrollPosition -= 6;
 		border.tilePosition.x = this.scrollPosition;
 		background.tilePosition.x = this.scrollPosition * 0.1;
