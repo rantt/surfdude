@@ -57,6 +57,8 @@ Game.Load.prototype = {
 
     this.game.load.atlasXML('shark', 'assets/images/shark.png', 'assets/atlas/shark.xml');
 
+    this.game.load.spritesheet('duck', 'assets/images/duck.png', 64, 64, 2);
+
     // Music Track
     // this.game.load.audio('music','soundtrack.mp3');
 

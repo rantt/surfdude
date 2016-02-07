@@ -5,10 +5,10 @@
  * Using Math.round() will give you a non-uniform distribution!
  */
 
-// // Choose Random integer in a range
-// function rand (min, max) {
-//     return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
+// Choose Random integer in a range
+function rand (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // var musicOn = true;
 
@@ -58,6 +58,8 @@ Game.Play.prototype = {
     this.enemies = this.game.add.group();
     this.timer = this.game.time.events.loop(1600, this.addEnemies, this);
 
+    
+
     // // Music
     // this.music = this.game.add.sound('music');
     // this.music.volume = 0.5;
@@ -102,28 +104,52 @@ Game.Play.prototype = {
     if (this.player.alive === false) {
       return;
     }else {
-      this.score += 1;
+      this.score += 10;
       this.scoreText.setText('Score: '+this.score);
     }
     var e;
-    if(this.enemies.getFirstExists(false) === null) {
-      console.log('inhere');
+    // if(this.enemies.getFirstExists(false) === null) {
+
+    // this.fowl = this.game.add.sprite(Game.w/2, Game.h/2+100, 'duck');
+    // this.fowl.animations.add('fly', [0,1],5, true);
+    // this.fowl.play('fly');
       // e = this.add.sprite(Game.w + 64, Game.h/2, 'shark');
-      e = this.add.sprite(Game.w,  Game.h-164, 'shark');
-      e.animations.add('bite', [0, 1, 2], 20);
-      e.anchor.setTo(0,-0.5);
-      this.game.physics.arcade.enable(e);
-      e.checkWorldBounds = true;
-      e.outOfBoundsKill = true;
-      e.bite = false;
-      // e.body.immovable = true;
+      if (rand(0,1) === 0) {
+        e = this.add.sprite(Game.w,  Game.h-164, 'shark');
+        e.animations.add('bite', [0, 1, 2], 20);
+        e.anchor.setTo(0,-0.5);
+        this.game.physics.arcade.enable(e);
+        e.checkWorldBounds = true;
+        e.outOfBoundsKill = true;
+        e.bite = false;
+        e.body.immovable = true;
+        console.log(e);
+      }else {
+        e = this.add.sprite(Game.w,  Game.h/2+100, 'duck');
+        e.animations.add('fly', [0,1],5, true);
+        e.play('fly');
+        e.anchor.setTo(0.5);
+        this.game.physics.arcade.enable(e);
+        e.body.setSize(32, 32);
+        e.checkWorldBounds = true;
+        e.outOfBoundsKill = true;
+        e.bite = false;
+        e.body.immovable = true;
+        console.log(e);
+
+      }
       this.enemies.add(e);
-    }else {
-      console.log('reset');
-      e = this.enemies.getFirstExists(false);
-      e.reset(Game.w, Game.h-164);
-      e.bite = false;
-    }
+    // }else {
+    //   console.log('reset');
+    //   e = this.enemies.getFirstExists(false);
+    //   if (e.key === 'shark') {
+    //     e.reset(Game.w, Game.h-164);
+    //     e.bite = false;
+    //   }else{
+    //     e.reset(Game.w, Game.h+100);
+    //   } 
+    //
+    // }
     e.body.velocity.x = -355;
   },
  jump: function() {
@@ -148,8 +174,8 @@ Game.Play.prototype = {
 
     //     this.player.y = Game.h-100;
       var t = this.game.add.tween(this.player)
-                .to({y: Game.h-100},600, Phaser.Easing.Linear.None)
-                .to({y: Game.h-164},600, Phaser.Easing.Linear.None)
+                .to({y: Game.h-64},400, Phaser.Easing.Linear.None)
+                .to({y: Game.h-164},400, Phaser.Easing.Linear.None)
                 .start();
 
       t.onComplete.add(function() {
@@ -254,12 +280,11 @@ Game.Play.prototype = {
   //     this.music.volume = 0.5;
   //   }
   // },
-  render: function() {
-    // game.debug.text('Health: ' + tri.health, 32, 96);
-    this.game.debug.body(this.player);
-    this.enemies.forEach(function(enemy) {
-      this.game.debug.body(enemy);
-    }, this);
-  }
+  // render: function() {
+  //   this.game.debug.body(this.player);
+  //   this.enemies.forEach(function(enemy) {
+  //     this.game.debug.body(enemy);
+  //   }, this);
+  // }
 
 };
