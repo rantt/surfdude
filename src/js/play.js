@@ -282,7 +282,6 @@ Game.Play.prototype = {
           });
           this.music.stop();
           this.player.alive = true;
-          // this.score = 0;
           this.game.state.start('Play');
         }
       }
