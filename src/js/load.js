@@ -64,7 +64,7 @@ Game.Load.prototype = {
 
   },
   create: function() {
-    // this.game.state.start('Menu');
-    this.game.state.start('Play');
+    this.game.state.start('Menu');
+    // this.game.state.start('Play');
   }
 };
