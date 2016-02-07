@@ -46,7 +46,7 @@ Game.Play.prototype = {
     border.body.immovable = true;
     border.body.allowGravity = false;
 
-    this.player = this.game.add.sprite(128, Game.h-164, 'player');
+    this.player = this.game.add.sprite(192, Game.h-164, 'player');
     this.game.physics.arcade.enable(this.player);
     this.player.body.setSize(32, 64);
     this.player.scale.x = 2;
@@ -75,6 +75,14 @@ Game.Play.prototype = {
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.tweening = false;
 
+
+    this.playAgainText = this.game.add.bitmapText(Game.w + 100, this.game.world.centerY, 'minecraftia','test',48);
+    
+    this.scoreText = this.game.add.bitmapText(Game.w-150, 24, 'minecraftia', 'Score: '+this.score, 24); 
+
+
+    this.loadTouchControls();
+
     wKey.onDown.add(function() {
       this.jump();
     },this);
@@ -91,14 +99,58 @@ Game.Play.prototype = {
       this.duck();
     },this);
 
-    this.playAgainText = this.game.add.bitmapText(Game.w + 100, this.game.world.centerY, 'minecraftia','test',48);
-    
-    this.scoreText = this.game.add.bitmapText(Game.w-150, 24, 'minecraftia', 'Score: '+this.score, 24); 
 
     //Create Twitter button as invisible, show during win condition to post highscore
     this.twitterButton = this.game.add.button(this.game.world.centerX, this.game.world.centerY + 200,'twitter', this.twitter, this);
     this.twitterButton.anchor.set(0.5);
     this.twitterButton.visible = false;
+  },
+  loadTouchControls: function() {
+
+    //Draw Arrow w/ Bitmap Data
+    var bmdsize = 80;
+    this.arrowbmd = this.game.add.bitmapData(bmdsize,bmdsize);
+    this.arrowbmd.ctx.clearRect(0,0,bmdsize,bmdsize);
+    this.arrowbmd.ctx.strokeStyle = 'white';
+    this.arrowbmd.ctx.lineWidth = 2;
+    this.arrowbmd.ctx.fill();
+    this.arrowbmd.ctx.beginPath();
+    this.arrowbmd.ctx.moveTo(bmdsize*1/2,0);
+    this.arrowbmd.ctx.lineTo(0,bmdsize*1/2);
+    this.arrowbmd.ctx.lineTo(bmdsize*1/4,bmdsize*1/2);
+    this.arrowbmd.ctx.lineTo(bmdsize*1/4,bmdsize);
+    this.arrowbmd.ctx.lineTo(bmdsize*3/4,bmdsize);
+    this.arrowbmd.ctx.lineTo(bmdsize*3/4,bmdsize*1/2);
+    this.arrowbmd.ctx.lineTo(bmdsize,bmdsize*1/2);
+    this.arrowbmd.ctx.fill();
+
+    //Add Touch Controls for mobile
+    //Up Arrow
+    this.upArrow = this.game.add.sprite(100, Game.h - 160, this.arrowbmd);
+    this.upArrow.tint = 0xdcdcdc;
+    this.upArrow.alpha = 0.5;
+    this.upArrow.anchor.setTo(0.5, 0.5);
+    this.upArrow.inputEnabled = true;
+    this.upArrow.events.onInputDown.add(this.jump, this);
+    this.upArrow.visible = false;
+
+    //Up Down
+    this.downArrow = this.game.add.sprite(100, Game.h - 40, this.arrowbmd);
+    this.downArrow.tint = 0xdcdcdc;
+    this.downArrow.alpha = 0.5;
+    this.downArrow.anchor.setTo(0.5, 0.5);
+    this.downArrow.inputEnabled = true;
+    this.downArrow.angle = 180;
+    this.downArrow.events.onInputDown.add(this.duck, this);
+    this.downArrow.visible = false;
+
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      this.upArrow.visible = true;
+      this.downArrow.visible = true;
+    }else{
+      this.upArrow.visible = false;
+      this.downArrow.visible = false;
+    }
   },
   addEnemies: function() {
     if (this.player.alive === false) {
