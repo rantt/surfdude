@@ -17,7 +17,6 @@ var wKey;
 var aKey;
 var sKey;
 var dKey;
-var score = 0;
 
 Game.Play = function(game) {
   this.game = game;
@@ -271,7 +270,7 @@ Game.Play.prototype = {
         console.log('hit');
       }, null, this); 
     }else {
-        this.playAgainText.setText('Try Again?');
+        this.playAgainText.setText('Play Again?');
         this.game.time.events.add(Phaser.Timer.SECOND * 1.5, function() { 
             this.game.add.tween(this.playAgainText).to({x: this.game.world.centerX-300}, 355, Phaser.Easing.Linear.None).start();
             this.twitterButton.visible = true;
@@ -283,7 +282,7 @@ Game.Play.prototype = {
           });
           this.music.stop();
           this.player.alive = true;
-          this.score = 0;
+          // this.score = 0;
           this.game.state.start('Play');
         }
       }
@@ -299,11 +298,11 @@ Game.Play.prototype = {
   },
   twitter: function() {
     //Popup twitter window to post highscore
-    var game_url = 'http://www.divideby5.com/games/GAMETITLE/'; 
+    var game_url = 'http://www.divideby5.com/games/surfdude/'; 
     var twitter_name = 'rantt_';
-    var tags = ['1GAM'];
+    var tags = [''];
 
-    window.open('http://twitter.com/share?text=My+best+score+is+'+score+'+playing+GAME+TITLE+See+if+you+can+beat+it.+at&via='+twitter_name+'&url='+game_url+'&hashtags='+tags.join(','), '_blank');
+    window.open('http://twitter.com/share?text=My+best+score+is+'+this.score+'+playing+Surf+Dude+See+if+you+can+beat+it.+at&via='+twitter_name+'&url='+game_url+'&hashtags='+tags.join(','), '_blank');
   },
 
   // toggleMute: function() {
